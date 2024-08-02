@@ -1,9 +1,14 @@
 from fastapi import FastAPI
+import uvicorn 
 
 app = FastAPI()
 
-@app.get("/")
+MOVIES_LIST = [{"name" : "TENET"}]
 
-async def root():
+@app.get("/movies")
+async def fetch_movies():
+    return {"data" : MOVIES_LIST}
 
-    return {"message": "Hello World"}
+#http://127.0.0.1:8080/movies
+if __name__ == "__main__":
+    uvicorn.run("main:app", host = '127.0.0.1', port = 8080, reload = True, debug = True)
