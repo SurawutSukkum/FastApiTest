@@ -2,7 +2,15 @@ from fastapi import FastAPI
 import uvicorn 
 import threading
 from datetime import datetime
-app = FastAPI()
+import json
+from flask import Flask, jsonify
+from flask_cors import CORS
+import time
+
+app = Flask(__name__)
+CORS(app)  # This will allow your React app to connect to this Flask API
+
+
 
 StationName = 0
 Status = 0
@@ -16,44 +24,55 @@ DownTime = 0
 IdleTime = 0
 Time = 0 
 
-@app.get("/StationName")
-async def fetch_StationName():
-    return '{"StationName":"'"StationName"+str(Time)+'"}'
+@app.route('/data', methods=['GET'])
+def get_data():
+    # Simulate a data response
+    return jsonify({"message": "StationName"+str(Time)})
 
-@app.get("/Status")
-async def fetch_Status():
+@app.route('/StationName', methods=['GET'])
+def fetch_StationName():
+    return  jsonify({"StationName": "StationName"+str(Time)})
+
+
+@app.route('/Status', methods=['GET'])
+def fetch_Status():
     return '{"Status":"'"Status"+str(Time)+'"}'
 
-@app.get("/Model")
-async def fetch_Model():
-    return '{"Model":"'"Model"+str(Time)+'"}'
+@app.route('/Model', methods=['GET'])
+def fetch_Model():
+    data = {"name": "Jane Smith", "email": "janesmith@example.com", "job": "Data Scientist"}
+    json_data = json.dumps(data)
+    return  jsonify({"message": "This is a sample data from Flask API"})
 
-@app.get("/CycleTime")
-async def fetch_CycleTime():
+#'{"Model":"'"Model"+str(Time)+'"}'
+#"{\"name\": \"Jane Smith\", \"email\": \"janesmith@example.com\", \"job\": \"Data Scientist\"}"
+
+@app.route('/CycleTime', methods=['GET'])
+def fetch_CycleTime():
     return '{"CycleTime":"'"CycleTime"+str(Time)+'"}'
 
-@app.get("/Count")
-async def fetch_Count():
+@app.route('/Count', methods=['GET'])
+def fetch_Count():
     return '{"Count":"'"Count"+str(Time)+'"}'
 
-@app.get("/OEE")
-async def fetch_OEE():
+@app.route("/OEE", methods=['GET'])
+def fetch_OEE():
     return '{"OEE":"'"OEE"+str(Time)+'"}'
 
-@app.get("/YIELD")
-async def fetch_YIELD():
+@app.route("/YIELD", methods=['GET'])
+def fetch_YIELD():
     return '{"YIELD":"'"YIELD"+str(Time)+'"}'
 
-@app.get("/RunTime")
-async def fetch_RunTime():
+@app.route("/RunTime", methods=['GET'])
+def fetch_RunTime():
     return '{"RunTime":"'"RunTime"+str(Time)+'"}'
 
-@app.get("/DownTime")
-async def fetch_DownTime():
+@app.route("/DownTime", methods=['GET'])
+def fetch_DownTime():
     return '{"DownTime":"'"DownTime"+str(Time)+'"}'
 
-@app.get("/IdleTime")
-async def fetch_IdleTime():
+@app.route("/IdleTime", methods=['GET'])
+def fetch_IdleTime():
     return '{"IdleTime":"'"IdleTime"+str(Time)+'"}'
 
 def mqtt_thread():
@@ -70,4 +89,4 @@ serial_thread = threading.Thread(target=serial_thread)
 serial_thread.start()
 #http://127.0.0.1:8080/StationName
 if __name__ == "__main__":
-    uvicorn.run("main:app", host = '127.0.0.1', port = 8080, reload = True, debug = True)
+    app.run(host='127.0.0.1', port=3001)
