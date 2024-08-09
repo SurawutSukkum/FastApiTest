@@ -42,7 +42,7 @@ def fetch_Status():
 def fetch_Model():
     data = {"name": "Jane Smith", "email": "janesmith@example.com", "job": "Data Scientist"}
     json_data = json.dumps(data)
-    return  jsonify({"message": "This is a sample data from Flask API"})
+    return  '{"Model":"'"Status"+str(Time)+'"}'
 
 #'{"Model":"'"Model"+str(Time)+'"}'
 #"{\"name\": \"Jane Smith\", \"email\": \"janesmith@example.com\", \"job\": \"Data Scientist\"}"
